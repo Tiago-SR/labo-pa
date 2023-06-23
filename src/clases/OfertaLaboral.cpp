@@ -102,10 +102,18 @@ ICollection* OfertaLaboral::listarAsignaturasOferta() {
   return ret;
 }
 
+void OfertaLaboral::altaEntrevista(Estudiante* e, dtFecha* f) {
+  Anotarse* a = (Anotarse*)(anotarse->find(new String(e->getEstudiante()->getCI().c_str())));
+  a->altaEntrevista(f);
+}
+
 bool OfertaLaboral::checkAsignatura(int codigo) {
   return this->asignaturas->member(new Integer(codigo));
 }
 
+void OfertaLaboral::crearEfectivo(Efectivo* e) {
+  efectivos->add(new String(e->mostrarInfoEstudiante()->getCI().c_str()), e);
+}
 
 void OfertaLaboral::asignarAsignatura(Asignatura* asig) {
   if (checkAsignatura(asig->getCodigo())) throw invalid_argument("La asignatura ya esta asignada a la oferta laboral");
@@ -148,30 +156,4 @@ void OfertaLaboral::desvincularSeccion() {
 
 
 OfertaLaboral::~OfertaLaboral() {
-  // IIterator* it = this->asignaturas->getIterator();
-  // while (it->hasCurrent()) {
-  //   Asignatura* asig = (Asignatura*)(it->getCurrent());
-  //   delete asig;
-  //   it->next();
-  // }
-  // delete it;
-  // delete this->asignaturas;
-
-  // IIterator* it2 = this->efectivos->getIterator();
-  // while (it2->hasCurrent()) {
-  //   Efectivo* ef = (Efectivo*)(it2->getCurrent());
-  //   delete ef;
-  //   it2->next();
-  // }
-  // delete it2;
-  // delete this->efectivos;
-
-  // IIterator* it3 = this->anotarse->getIterator();
-  // while (it3->hasCurrent()) {
-  //   Anotarse* an = (Anotarse*)(it3->getCurrent());
-  //   delete an;
-  //   it3->next();
-  // }
-  // delete it3;
-  // delete this->anotarse;
 }

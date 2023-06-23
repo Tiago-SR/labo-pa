@@ -2,7 +2,7 @@ INTERFACES = ICollection/interfaces/
 COLECCIONES = ICollection/collections/
 CLASES = src/clases
 DATATYPES = src/datatype
-OBJETOS = dtAsignatura.o dtDireccion.o dtEmpresa.o  dtEstudiante.o dtEstudianteTodo.o dtFecha.o dtOfertaLaboral.o dtRangoSalario.o dtSeccion.o dtSucursal.o Asignatura.o Empresa.o Anotarse.o Estudiante.o Factory.o ISistema.o Seccion.o OfertaLaboral.o  Sistema.o Sucursal.o Integer.o String.o List.o ICollection.o ICollectible.o IIterator.o IKey.o OrderedKey.o OrderedDictionaryEntry.o ListNode.o ListIterator.o IDictionary.o OrderedDictionary.o main.o
+OBJETOS = dtAsignatura.o dtDireccion.o dtEmpresa.o  dtEstudiante.o dtEstudianteTodo.o dtFecha.o dtOfertaLaboral.o dtRangoSalario.o dtSeccion.o dtSucursal.o Asignatura.o Empresa.o Anotarse.o Estudiante.o Factory.o ISistema.o Seccion.o OfertaLaboral.o  Sistema.o Sucursal.o Carrera.o Efectivo.o Integer.o String.o List.o ICollection.o ICollectible.o IIterator.o IKey.o OrderedKey.o OrderedDictionaryEntry.o ListNode.o ListIterator.o IDictionary.o OrderedDictionary.o main.o
 
 
 run:
@@ -15,6 +15,7 @@ run:
 
 all: $(OBJETOS)
 	g++ $(OBJETOS) -o programa
+
 
 dtAsignatura.o: ICollectible.o
 	g++ -c $(DATATYPES)/dtAsignatura.cpp
@@ -52,11 +53,17 @@ Asignatura.o: ICollectible.o dtAsignatura.o
 Empresa.o: ICollectible.o IDictionary.o ICollection.o OrderedDictionary.o List.o String.o dtEmpresa.o dtDireccion.o Sucursal.o OfertaLaboral.o
 	g++ -c $(CLASES)/Empresa.cpp
 
-Estudiante.o: ICollectible.o IDictionary.o ICollection.o OrderedDictionary.o List.o Integer.o dtDireccion.o dtFecha.o dtEstudiante.o dtEstudianteTodo.o Asignatura.o Anotarse.o
+Estudiante.o: ICollectible.o IDictionary.o ICollection.o OrderedDictionary.o List.o Integer.o dtDireccion.o dtFecha.o dtEstudiante.o dtEstudianteTodo.o Asignatura.o Anotarse.o Efectivo.o
 	g++ -c $(CLASES)/Estudiante.cpp
 	
 Anotarse.o: 
 	g++ -c $(CLASES)/Anotarse.cpp
+
+Carrera.o: 
+	g++ -c $(CLASES)/Carrera.cpp
+
+Efectivo.o:
+	g++ -c $(CLASES)/Efectivo.cpp
 
 
 Factory.o: ISistema.o Sistema.o

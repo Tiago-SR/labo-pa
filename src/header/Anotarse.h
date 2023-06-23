@@ -29,8 +29,8 @@ class Anotarse : public ICollectible {
     Estudiante * getEstudiante();
     OfertaLaboral * getOfertaLaboral();
 
+    void altaEntrevista(dtFecha*);
     dtOfertaLaboral* mostrarLlamadoEstudiante(); // es como getOfertaLaboral pero devolviendo datatype
-    
 
     ~Anotarse() {};
 };

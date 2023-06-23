@@ -17,7 +17,9 @@ using namespace std;
 #include "Seccion.h"
 #include "Estudiante.h"
 #include "Anotarse.h"
+#include "Efectivo.h"
 
+class Efectivo;
 class Anotarse;
 class Estudiante;
 class Seccion;
@@ -64,8 +66,10 @@ class OfertaLaboral : public ICollectible {
     dtOfertaLaboral* getInfoOfertaLaboral();
     ICollection* listarAsignaturasOferta();
 
+    void altaEntrevista(Estudiante*, dtFecha*);
 
     void modificarLlamado(string, string, string, string, string, string, string, string);
+    void crearEfectivo(Efectivo*);
 
     void asignarAsignatura(Asignatura *);
     ICollection* listarAsignaturas();

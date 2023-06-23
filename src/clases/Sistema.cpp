@@ -7,6 +7,7 @@ Sistema::Sistema() {
   this->estudiantes = new OrderedDictionary();
   this->asignaturas = new OrderedDictionary();
   this->ofertas = new OrderedDictionary();
+  this->carreras = new OrderedDictionary();
 
   altaEmpresa("Empresa1", "1");
     altaSucursal("1", "suc", "098", new dtDireccion("Calle1", 1));
@@ -23,6 +24,7 @@ Sistema::Sistema() {
 
   altaAsignatura(1, "Matematicas", 10);
   altaAsignatura(2, "Ciencias", 10);
+  altaAsignatura(3, "Programacion", 50);
 
   altaOfertaLaboral("1", "suc", "sec", new dtOfertaLaboral(1, "Dev", "Web-Dev", 30, new dtRangoSalario(10, 30), new dtFecha("11/06/2023"), new dtFecha("11/07/2023"), 1));
   altaOfertaLaboral("1", "suc", "sec2", new dtOfertaLaboral(2, "Dav", "dev-Dev", 30, new dtRangoSalario(10, 30), new dtFecha("03/3/2002"), new dtFecha("31/12/2023"), 1));
@@ -35,20 +37,21 @@ Sistema::Sistema() {
   altaEstudiante("321", "denis", "Bar", "342224", new dtDireccion("Calle4", 4), new dtFecha("01/01/2000"), 0);
 
   Empresa* e = getEmpresa("1");
-  Sucursal* s = e->getSucursal("suc2");
-  Seccion* sec = s->getSeccion("sec4");
-  OfertaLaboral* o = sec->getOfertaLaboral(3);
+  Sucursal* s = e->getSucursal("suc");
+  Seccion* sec = s->getSeccion("sec");
+  OfertaLaboral* o = sec->getOfertaLaboral(1);
 
   o->asignarAsignatura(getAsignatura(1));
   o->asignarAsignatura(getAsignatura(2));
 
+  Estudiante* est = getEstudiante("123");
+  est->agregarAsignatura(getAsignatura(1));
+  est->agregarAsignatura(getAsignatura(2));
+  est->agregarAsignatura(getAsignatura(3));
 
-  // bajaEmpresa("1");
-  // bajaSucursal("1", "suc");
-  // bajaSeccion("1", "suc2", "sec4");
-
-
-
+  est = getEstudiante("321");
+  est->agregarAsignatura(getAsignatura(1));
+  est->agregarAsignatura(getAsignatura(2));
   // cout << ">>Sistema Cargado<<\n";
 }
 
@@ -230,6 +233,22 @@ bool Sistema::checkAsignaturaDeEstudiante(string ci, int nroExp) {
   Estudiante* e = ((Estudiante*)(this->estudiantes->find(new String(ci.c_str()))));
   return e->checkAsignatura(nroExp);
 }
+Estudiante* Sistema::getEstudiante(string ci) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  return (Estudiante*)(this->estudiantes->find(new String(ci.c_str())));
+}
+
+// --> carreras
+bool Sistema::checkCarrera(int codigo){
+  return this->carreras->member(new Integer(codigo));
+}
+void Sistema::altaCarrera(int codigo, string nombre, int creditosNecesarios, IDictionary* asignaturas){
+  if (!checkCarrera(codigo)) throw invalid_argument("Codigo de carrera ya registrado");
+  this->carreras->add(new Integer(codigo), new Carrera(codigo,nombre,creditosNecesarios,asignaturas));
+}
+IDictionary *Sistema::getCarreras() {
+  return this->carreras;
+}
 
 // Caso de uso ModificarLlamado
 dtOfertaLaboral* Sistema::getOfertaLaboral(int nroExp) {
@@ -278,20 +297,36 @@ ICollection* Sistema::listarEstudiantesInscriptos(int nroExp) {
   return ret;
 }
 
+
+// Caso de uso Alta Entrevista
+void Sistema::altaEntrevista(string ci, int nroExp, string fecha) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  if (!checkOferta(nroExp)) throw invalid_argument("Oferta no encontrada");
+  if (!checkEstudianteInscripto(ci, nroExp)) throw invalid_argument("Estudiante no inscripto");
+  dtFecha* f = new dtFecha(fecha);
+  if (f->menorQue(Sistema::getFechaActual())) throw invalid_argument("Fecha invalida");
+  Estudiante* e = ((Estudiante*)(estudiantes->find(new String(ci.c_str()))));
+  OfertaLaboral* o = ((OfertaLaboral*)(ofertas->find(new Integer(nroExp))));
+  o->altaEntrevista(e, f);
+}
+
+
 // Caso de uso Asignar Oferta A Estudiante
 bool Sistema::checkEstudianteInscripto(string ci, int nroExp) {
   if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
   Estudiante* e = ((Estudiante*)(estudiantes->find(new String(ci.c_str()))));
   return e->estaVinculadoOferta(nroExp);
 }
-void Sistema::asignarOfertaEstudiante(string ci, int nroExp) {
+void Sistema::asignarOfertaEstudiante(string ci, int nroExp, float sueldo) {
   if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
   if (!checkOferta(nroExp)) throw invalid_argument("Oferta no encontrada");
-  if (checkEstudianteInscripto(ci, nroExp)) throw invalid_argument("Estudiante ya inscripto");
-  // Efectivo* e = new Efectivo();
+  if (!checkEstudianteInscripto(ci, nroExp)) throw invalid_argument("Estudiante ya inscripto");
   Estudiante* e = ((Estudiante*)(estudiantes->find(new String(ci.c_str()))));
   OfertaLaboral* o = ((OfertaLaboral*)(ofertas->find(new Integer(nroExp))));
-  cout << "asignaqrOfertaEstudiante" << endl;
+  Efectivo* ef = new Efectivo(Sistema::getFechaActual(), sueldo, e, o);
+  e->crearEfectivo(ef);
+  o->crearEfectivo(ef);
+  cout << "Oferta asignada al estudiante" << endl;
 }
 void Sistema::inscribirEstudianteEnOferta(string ci, int nroExp) {
   if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
@@ -299,8 +334,15 @@ void Sistema::inscribirEstudianteEnOferta(string ci, int nroExp) {
   if (checkEstudianteInscripto(ci, nroExp)) throw invalid_argument("Estudiante ya inscripto");
   Estudiante* e = ((Estudiante*)(estudiantes->find(new String(ci.c_str()))));
   OfertaLaboral* o = ((OfertaLaboral*)(ofertas->find(new Integer(nroExp))));
+  IIterator* it = o->listarAsignaturasOferta()->getIterator();
+  while (it->hasCurrent()) {
+    Asignatura* a = (Asignatura*)(it->getCurrent());
+    if(!e->checkAsignatura(a->getCodigo())) throw invalid_argument("Estudiante no cumple con los requisitos");
+    it->next();
+  }
   o->inscribirEstudianteEnOferta(e, Sistema::getFechaActual());
 }
+
 //  --> primer Diagrama de comunicacion
 ICollection* Sistema::listarEmpresas() {
   ICollection* ret = new List();
@@ -347,11 +389,7 @@ ICollection* Sistema::listarOfertasActivas() {
   return ret;
 }
 
-
-
-
 // --> cuarto Diagrama de comunicacion
-
 ICollection* Sistema::listarEstudiantes() {
   ICollection* ret = new List();
   IIterator* it = this->estudiantes->getIterator();
@@ -398,7 +436,7 @@ void Sistema::darBajaOferta(string rut, string nombreSuc, string nombreSec, int 
     ofertas->remove(new Integer(nroExp));
     delete o;
   } catch (invalid_argument& e) {
-    cout << "Error: " << e.what() << endl;
+    throw e;
   }
 }
 void Sistema::darBajaOferta(int nroExp) {

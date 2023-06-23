@@ -53,7 +53,10 @@ class ISistema {
     virtual ICollection* listarAsignaturasDeOferta(int) = 0;
 
     // Caso de uso Asignar Oferta A Estudiante
-    virtual void asignarOfertaEstudiante(string, int) = 0;
+    virtual void asignarOfertaEstudiante(string, int, float) = 0;
+
+    // Caso de uso Alta Entrevista
+    virtual void altaEntrevista(string ci, int nroExp, string fecha) = 0;
 
 
     //  --> primer Diagrama de comunicacion

@@ -57,13 +57,15 @@ int Estudiante::getCreditos() {
 bool Estudiante::checkAsignatura(int nroExp) {
   return this->asignaturas->member(new Integer(nroExp));
 }
-bool Estudiante::estaVinculadoAsignatura(int id) {
-  return this->asignaturas->member(new Integer(id));
+void Estudiante::agregarAsignatura(Asignatura* a) {
+  this->asignaturas->add(new Integer(a->getCodigo()), a);
 }
 void Estudiante::crearVinculo(Anotarse* a) {
   anotarse->add(new Integer(a->mostrarLlamadoEstudiante()->getNroExpediente()), a);
 }
-// solo declaracion de metodos no codigo interno
+void Estudiante::crearEfectivo(Efectivo* e) {
+  efectivos->add(new Integer(e->mostrarInfoOferta()->getNroExpediente()), e);
+} 
 dtEstudiante* Estudiante::getEstudiante() {
   return new dtEstudiante(ci, nombre, apellido);
 }
@@ -84,8 +86,7 @@ ICollection* Estudiante::mostrarLlamadosEstudiante() {
   ICollection* ret = new List();
   IIterator* it = anotarse->getIterator();
   while (it->hasCurrent()) {
-    // TO-DO para cuando se implemente anotarse
-    // ret->add(((Anotarse*)(it->getCurrent()))->getInfoAnotarse());
+    ret->add(((Anotarse*)(it->getCurrent()))->mostrarLlamadoEstudiante());
     it->next();
   }
   delete it;

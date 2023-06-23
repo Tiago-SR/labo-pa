@@ -25,8 +25,8 @@ class Efectivo : public ICollectible {
     Estudiante * getEstudiante();
     OfertaLaboral * getOfertaLaboral();
 
-    dtOfertaLaboral* mostrarLlamadoEstudiante(); // es como getOfertaLaboral pero devolviendo datatype
-    
+    dtOfertaLaboral* mostrarInfoOferta(); // es como getOfertaLaboral pero devolviendo datatype
+    dtEstudiante* mostrarInfoEstudiante();
 
     ~Efectivo() {};
 };

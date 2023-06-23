@@ -21,3 +21,6 @@ OfertaLaboral* Anotarse::getOfertaLaboral() {
 dtOfertaLaboral* Anotarse::mostrarLlamadoEstudiante() {
   return ofertaLaboral->getInfoOfertaLaboral();
 }
+void Anotarse::altaEntrevista(dtFecha* fecha) {
+  entrevista->add(fecha);
+}

@@ -24,6 +24,9 @@ Estudiante* Efectivo::getEstudiante() {
 OfertaLaboral* Efectivo::getOfertaLaboral() {
   return this->ofertaLaboral;
 }
-dtOfertaLaboral* Efectivo::mostrarLlamadoEstudiante() {
+dtOfertaLaboral* Efectivo::mostrarInfoOferta() {
   return this->ofertaLaboral->getInfoOfertaLaboral();
+}
+dtEstudiante* Efectivo::mostrarInfoEstudiante() {
+  return this->estudiante->getEstudiante();
 }

@@ -17,7 +17,10 @@ using namespace std;
 
 #include "Asignatura.h"
 #include "Anotarse.h"
+#include "Efectivo.h"
+
 class Anotarse;
+class Efectivo;
 class Estudiante : public ICollectible {
   private:
     string ci;
@@ -50,9 +53,10 @@ class Estudiante : public ICollectible {
 
     bool checkAsignatura(int);
 
-    bool estaVinculadoAsignatura(int);
+    void agregarAsignatura(Asignatura*);
     bool estaVinculadoOferta(int);
     void crearVinculo(Anotarse*);
+    void crearEfectivo(Efectivo*);
     dtEstudiante* getEstudiante();
     dtEstudianteTodo* getEstudianteTodo();
     ICollection* mostrarAsignaturas();

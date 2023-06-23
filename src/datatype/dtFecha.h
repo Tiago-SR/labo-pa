@@ -4,7 +4,9 @@
 #include <iostream>
 using namespace std;
 
-class dtFecha {
+#include "../../ICollection/interfaces/ICollectible.h"
+
+class dtFecha : public ICollectible {
 private:
   int dia;
   int mes;

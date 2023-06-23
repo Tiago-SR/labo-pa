@@ -1471,14 +1471,15 @@ void consultarDatosDeEstudiante() {
     indicando el error en caso de que lo haya, o realiza la consulta
     correspondiente
   */
+  cout << "Estudiantes Registrados: \n";
   listarEstudiantes(false);
   string cedula;
   cout << "Ingrese la cedula del estudiante: ";
   getline(cin, cedula);
-  while (cedula.empty() || !esNumero(cedula)) {
+  while (cedula.empty()) {
     system(clear);
     listarEstudiantes(false);
-    cout << "La cedula no puede estar vacia y debe ser un numero. Por favor, ingrese una cedula correcta: ";
+    cout << "La cedula no puede estar vacia. Por favor, ingrese una cedula correcta: ";
     getline(cin, cedula);
   }
   if (!sis->checkEstudiante(cedula)) {
@@ -1506,8 +1507,8 @@ void consultarDatosDeEstudiante() {
       while (it->hasCurrent()) {
         dtAsignatura* dtAsig = (dtAsignatura*)(it->getCurrent());
         cout << "\tCodigo: " << dtAsig->getCodigo() << endl;
-        cout << "\tNombre: " << dtAsig->getNombre() << endl;
-        cout << "\tCreditos: " << dtAsig->getCreditos() << endl;
+        cout << "\t  Nombre: " << dtAsig->getNombre() << endl;
+        cout << "\t  Creditos: " << dtAsig->getCreditos() << endl << endl;
         it->next();
       }
     }
@@ -1523,13 +1524,13 @@ void consultarDatosDeEstudiante() {
         cout << "\tTitulo: " << dtOferta->getTitulo() << endl;
         cout << "\tDescripcion: " << dtOferta->getDesc() << endl;
         cout << "\tCantidad de horas semanales: " << dtOferta->getCantHoras() << endl;
-        cout << "\tSalario: " << dtOferta->getSalario()->getSalarioMin() << " - " << dtOferta->getSalario()->getSalarioMax() << endl;
+        cout << "\tSalario: $" << dtOferta->getSalario()->getSalarioMin() << " - $" << dtOferta->getSalario()->getSalarioMax() << endl;
         cout << "\tFecha de inicio: " << dtOferta->getFechaInicio()->getFecha() << endl;
         cout << "\tFecha de fin: " << dtOferta->getFechaFin()->getFecha() << endl;
         cout << "\tCantidad de puestos: " << dtOferta->getCantPuestos() << endl;
-        cout << "\tNombre de la seccion: " << sis->mostrarInfoSeccionDeOferta(dtOferta->getNroExpediente()) << endl;
-        cout << "\tNombre de la sucursal: " << sis->mostrarInfoSucursalDeOferta(dtOferta->getNroExpediente()) << endl;
-        cout << "\nNombre de la empresa: " << sis->mostrarInfoEmpresaDeOferta(dtOferta->getNroExpediente()) << endl;
+        cout << "\tNombre de la seccion: " << sis->mostrarInfoSeccionDeOferta(dtOferta->getNroExpediente())->getNombre() << endl;
+        cout << "\tNombre de la sucursal: " << sis->mostrarInfoSucursalDeOferta(dtOferta->getNroExpediente())->getNombre() << endl;
+        cout << "\tNombre de la empresa: " << sis->mostrarInfoEmpresaDeOferta(dtOferta->getNroExpediente())->getNombre() << endl << endl;
         it->next();
       }
     }
@@ -1728,8 +1729,9 @@ void asignarOfertaEstudiante() {
     - seleccionar oferta ✅
     - listarEstudiantesInscriptos ✅
     - seleccionar estudiante ✅
-    - dar alta en efectivo
+    - dar alta en efectivo ✅
   */
+  cout << "Ofertas laborales vigentes: \n";
   listarOfertas(false);
   cout << "\nIngrese el numero de expediente de la oferta: ";
   string nroExp;
@@ -1744,14 +1746,15 @@ void asignarOfertaEstudiante() {
     esperarParaContinuar();
     return;
   }
-
+  system(clear);
+  cout << "\nEstudiantes inscriptos en la oferta " << nroExp << ":\n";
   if (!listarEstudiantesInscriptos(nroExp, false)) return;
   cout << "\nIngrese la cedula del estudiante: ";
   string cedula;
   getline(cin, cedula);
-  while (cedula.empty() || !esNumero(cedula)) {
+  while (cedula.empty()) {
     system(clear);
-    cout << "La cedula no puede estar vacia y debe ser un numero. Por favor, ingrese un numero correcto: ";
+    cout << "La cedula no puede estar vacia. Por favor, ingrese un numero correcto: ";
     getline(cin, cedula);
   }
   if(!sis->checkEstudiante(cedula)) {
@@ -1759,10 +1762,18 @@ void asignarOfertaEstudiante() {
     esperarParaContinuar();
     return;
   }
+  string sueldo;
+  cout << "\nIngrese el sueldo: ";
+  getline(cin, sueldo);
+  while (sueldo.empty() || !esNumero(sueldo)) {
+    system(clear);
+    cout << "El sueldo no puede estar vacio y debe ser un numero. Por favor, ingrese un numero correcto: ";
+    getline(cin, sueldo);
+  }
 
   try {
-    sis->asignarOfertaEstudiante(cedula, stoi(nroExp));
-  } catch (const std::exception& e) {
+    sis->asignarOfertaEstudiante(cedula, stoi(nroExp), stof(sueldo));
+  } catch (exception& e) {
     cerr << "Error: "<< e.what() << '\n';
   }
 }
@@ -1805,46 +1816,69 @@ void inscripcionOfertaLaboral(){
   }
 }
 
-// void altaEntrevista(){
-// 	string ci;
-// 	int nro;
-// 	string fecha;
-// 	cout << "Seleccione una de las siguientes ofertas:" << endl;
-// 	listarOfertas();
-// 	getline(cin, nro);
-// 	while(nro.empty()){
-// 		system(clear);
-// 		cout << "El Numero de Expediente no puede estar vacio. Por favor, ingrese un numero: ";
-// 		getline(cin, nro);
-// 	}
-// 	if (!sis->checkOferta(nro)) {
-// 		cout << "La oferta de expediente " << nro << " no existe";
-// 		esperarParaContinuar();
-// 		return;
-//     }
-// 	cout << "Estudiantes inscriptos a esa oferta: "<< endl;
-// 	listarEstudiantesInscriptos(nro);
-// 	cout << "Ingrese una cedula del estudiante que desea entrevistar:";
-// 	getline(cin,ci);
-// 	while(ci.empty()){
-// 		system(clear);
-// 		cout << "La Cedula no puede estar vacia. Por favor, ingrese una cedula: ";
-// 		getline(cin, ci);
-// 	}
-// 	if (!sis->checkEstudiante(ci)) {
-// 		cout << "La cedula " << ci << " no existe";
-// 		esperarParaContinuar();
-// 		return;
-//     }
-// 	cout << "Ingrese la fecha en la cual se realizara la entrevista (dd/mm/aaaa): ";
-// 	getline(cin,fecha);
-// 	while (fecha.empty() || !esFecha(fecha)) {
-//     system(clear);
-//     cout << "La fecha no puede estar vacia y debe tener el formato dd/mm/aaaa. Por favor, ingrese una fecha de inicio correcta: ";
-//     getline(cin, fecha);
-//   }
-// 	sis->altaEntrevista(ci,nro,fecha);
-// }
+void altaEntrevista(){
+  /*
+    El caso de uso comienza cuando un Usuario desea establecer una entrevista
+    con un Estudiante inscripto a una Oferta Laboral. Para esto primero obtiene
+    una lista de las ofertas publicadas y escoge una. El Sistema responde con
+    una lista de Estudiantes inscriptos a esa oferta, y elige al que desea
+    entrevistar. Finalmente indica la fecha en la cual se realizará la entrevista.
+    En todos los casos el Sistema controlará la existencia y validez de la oferta,
+    así también como del Estudiante a entrevistar, y verificará que la fecha de
+    esta se ingrese de acuerdo a los límites establecidos de la Oferta Laboral
+    seleccionada, indicando el error en caso de que lo haya, o realiza el alta
+    correspondiente.
+    - listarOfertas ✅
+    - seleccionar oferta ✅
+    - listarEstudiantesInscriptos ✅
+    - seleccionar estudiante ✅
+    - ingresar fecha ✅
+    - ingresar fecha a coleccion de entrevista en el anotarse existente entre ci y nroexp ✅
+  */
+	string ci, nro, fecha;
+	cout << "Seleccione una de las siguientes ofertas:" << endl;
+	listarOfertas(false);
+  cout << "Ingrese el numero de expediente:";
+	getline(cin, nro);
+  while(nro.empty() || !esNumero(nro)) {
+    system(clear);
+    cout << "El Numero de Expediente no puede estar vacio y debe ser un numero. Por favor, ingrese un numero: ";
+    getline(cin, nro);
+  }
+	if (!sis->checkOferta(stoi(nro))) {
+		cout << "La oferta de expediente " << nro << " no existe";
+		esperarParaContinuar();
+		return;
+  }
+	cout << "Estudiantes inscriptos a esa oferta: "<< endl;
+	if (!listarEstudiantesInscriptos(nro, false)) return;
+  
+	cout << "Ingrese una cedula del estudiante que desea entrevistar:";
+	getline(cin,ci);
+	while(ci.empty()){
+		system(clear);
+		cout << "La Cedula no puede estar vacia. Por favor, ingrese una cedula: ";
+		getline(cin, ci);
+	}
+	if (!sis->checkEstudiante(ci)) {
+		cout << "La cedula " << ci << " no existe";
+		esperarParaContinuar();
+		return;
+    }
+	cout << "Ingrese la fecha en la cual se realizara la entrevista (dd/mm/aaaa): ";
+	getline(cin,fecha);
+	while (fecha.empty() || !esFecha(fecha)) {
+    system(clear);
+    cout << "La fecha no puede estar vacia y debe tener el formato dd/mm/aaaa. Por favor, ingrese una fecha de inicio correcta: ";
+    getline(cin, fecha);
+  }
+  try {
+	  sis->altaEntrevista(ci, stoi(nro), fecha);
+    cout << "Entrevista creada con exito" << endl;
+  } catch (const exception& e) {
+    cerr << "Error: "<< e.what() << '\n';
+  }
+}
 
 int main () {
   // menu();
@@ -1863,22 +1897,25 @@ int main () {
   ==> Casos de uso de Matias <==
     Modificar Estudiante
     Alta Estudiante --> ingresarEstudiante(); ✅
-    Asignación de Oferta a Estudiante
+    asignarOfertaEstudiante(); ✅
   */
 
   /*
   ==> Casos de uso de Cristian <==
-    Alta Entrevista
-    Inscripción Oferta Laboral
+    altaEntrevista();           ✅
+    inscripcionOfertaLaboral(); ✅
   */
   cout << "Bienvenido al Sistema de Ofertas Laborales" << endl;
 
-  // asignarOfertaEstudiante();
-  inscripcionOfertaLaboral();
+  sis->inscribirEstudianteEnOferta("123", 1);
+  sis->inscribirEstudianteEnOferta("321", 1);
 
-  listarEstudiantesInscriptos("1", false);
 
+  altaEntrevista();
   
+  
+  
+
   cout<<"\nFin Main\n";
   return 0;
 }

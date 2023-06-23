@@ -29,6 +29,7 @@ using namespace std;
 #include "OfertaLaboral.h"
 #include "Estudiante.h"
 #include "Efectivo.h"
+#include "Carrera.h"
 
 
 
@@ -40,6 +41,7 @@ class Sistema : public ISistema {
     IDictionary* estudiantes;
     IDictionary* asignaturas;
     IDictionary* ofertas;
+    IDictionary* carreras;
   public:
     virtual ~Sistema() {};
     static Sistema* getInstance();
@@ -78,6 +80,12 @@ class Sistema : public ISistema {
     void altaEstudiante(string, string, string, string, dtDireccion*, dtFecha*, int);
     void bajaEstudiante(string);
     bool checkAsignaturaDeEstudiante(string, int);
+    Estudiante* getEstudiante(string);
+
+    // --> carreras
+    bool checkCarrera(int);
+    void altaCarrera(int, string, int, IDictionary*);
+    IDictionary* getCarreras();
 
     // Caso de uso Modificar Llamado
     dtOfertaLaboral* getOfertaLaboral(int);
@@ -89,10 +97,13 @@ class Sistema : public ISistema {
     // Caso de uso Inscribir Estudiante
 
 
+    // Caso de uso Alta Entrevista
+    void altaEntrevista(string ci, int nroExp, string fecha);
+
     // Caso de uso Asignar Oferta A Estudiante
     bool checkEstudianteInscripto(string, int);
     
-    void asignarOfertaEstudiante(string, int);
+    void asignarOfertaEstudiante(string, int, float);
 
     // --> primer Diagrama de comunicacion
     ICollection* listarEmpresas();
