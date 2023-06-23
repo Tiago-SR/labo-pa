@@ -52,6 +52,16 @@ Sistema::Sistema() {
   est = getEstudiante("321");
   est->agregarAsignatura(getAsignatura(1));
   est->agregarAsignatura(getAsignatura(2));
+
+  altaCarrera(1, "Ingenieria en Computacion", 15, nullptr);
+  altaCarrera(2, "Ingenieria en Software", 30, nullptr);
+  Carrera* c = getCarrera(1);
+  c->agregarAsignatura(getAsignatura(1));
+  c->agregarAsignatura(getAsignatura(3));
+
+  c = getCarrera(2);
+  c->agregarAsignatura(getAsignatura(2));
+  c->agregarAsignatura(getAsignatura(3));
   // cout << ">>Sistema Cargado<<\n";
 }
 
@@ -188,6 +198,9 @@ void Sistema::altaOfertaLaboral(string rut, string nombreSucursal, string nombre
   this->ofertas->add(key, new OfertaLaboral(infoOferta, e->getSucursal(nombreSucursal)->getSeccion(nombreSeccion)));
   e->altaOfertaLaboral(nombreSucursal, nombreSeccion, (OfertaLaboral*)(this->ofertas->find(key)));
 }
+OfertaLaboral* Sistema::getOferta(int nroExp){
+  return (OfertaLaboral*)ofertas->find(new Integer(nroExp));
+}
 void Sistema::seleccionarAsignatura(int codigo, int nroExp) {
   if (!checkOferta(nroExp)) throw invalid_argument("Oferta no encontrada");
   if (!checkAsignatura(codigo)) throw invalid_argument("Asignatura no encontrada");
@@ -242,12 +255,51 @@ Estudiante* Sistema::getEstudiante(string ci) {
 bool Sistema::checkCarrera(int codigo){
   return this->carreras->member(new Integer(codigo));
 }
+bool Sistema::checkCarreraDeEstudiante(string ci, int codigo) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  Estudiante* e = ((Estudiante*)(this->estudiantes->find(new String(ci.c_str()))));
+  return e->checkCarrera(codigo);
+}
 void Sistema::altaCarrera(int codigo, string nombre, int creditosNecesarios, IDictionary* asignaturas){
-  if (!checkCarrera(codigo)) throw invalid_argument("Codigo de carrera ya registrado");
-  this->carreras->add(new Integer(codigo), new Carrera(codigo,nombre,creditosNecesarios,asignaturas));
+  if (checkCarrera(codigo)) throw invalid_argument("Codigo de carrera ya registrado");
+  if (asignaturas == nullptr) 
+    carreras->add(new Integer(codigo), new Carrera(codigo,nombre,creditosNecesarios));
+  else 
+    this->carreras->add(new Integer(codigo), new Carrera(codigo,nombre,creditosNecesarios,asignaturas));
 }
 IDictionary *Sistema::getCarreras() {
   return this->carreras;
+}
+void Sistema::agregarCarreraEstudiante(string ci, int codigo) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  if (!checkCarrera(codigo)) throw invalid_argument("Carrera no encontrada");
+  Estudiante* e = ((Estudiante*)(this->estudiantes->find(new String(ci.c_str()))));
+  e->agregarCarrera((Carrera*)(this->carreras->find(new Integer(codigo))));
+}
+void Sistema::quitarCarreraDeEstudiante(string ci, int codigo) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  if (!checkCarrera(codigo)) throw invalid_argument("Carrera no encontrada");
+  Estudiante* e = ((Estudiante*)(this->estudiantes->find(new String(ci.c_str()))));
+  e->quitarCarrera(codigo);
+}
+Carrera* Sistema::getCarrera(int codigo) {
+  if (!checkCarrera(codigo)) throw invalid_argument("Carrera no encontrada");
+  return (Carrera*)(this->carreras->find(new Integer(codigo)));
+}
+ICollection* Sistema::mostrarCarrerasDeEstudiante(string ci) {
+  if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");
+  Estudiante* e = ((Estudiante*)(this->estudiantes->find(new String(ci.c_str()))));
+  return e->mostrarCarreras();
+}
+ICollection* Sistema::mostrarCarreras() {
+  ICollection* ret = new List();
+  IIterator* it = carreras->getIterator();
+  while (it->hasCurrent()) {
+    ret->add((Carrera*)(it->getCurrent()));
+    it->next();
+  }
+  delete it;
+  return ret;
 }
 
 // Caso de uso ModificarLlamado
@@ -326,7 +378,6 @@ void Sistema::asignarOfertaEstudiante(string ci, int nroExp, float sueldo) {
   Efectivo* ef = new Efectivo(Sistema::getFechaActual(), sueldo, e, o);
   e->crearEfectivo(ef);
   o->crearEfectivo(ef);
-  cout << "Oferta asignada al estudiante" << endl;
 }
 void Sistema::inscribirEstudianteEnOferta(string ci, int nroExp) {
   if (!checkEstudiante(ci)) throw invalid_argument("Estudiante no encontrado");

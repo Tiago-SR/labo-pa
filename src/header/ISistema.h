@@ -34,6 +34,7 @@ class ISistema {
     virtual bool checkAsignatura(int) = 0;
     virtual void altaAsignatura(int, string, int) = 0;
     virtual void bajaAsignatura(int) = 0;
+    virtual Asignatura* getAsignatura(int) = 0;
 
     virtual bool checkOferta(int) = 0;
     virtual ICollection* listarOfertasActivasDeEmpresa(string) = 0;
@@ -43,6 +44,15 @@ class ISistema {
     virtual void bajaEstudiante(string) = 0;
     virtual bool checkAsignaturaDeEstudiante(string, int) = 0;
 
+    virtual void altaCarrera(int, string, int, IDictionary*) = 0;
+    virtual bool checkCarrera(int) = 0;
+    virtual bool checkCarreraDeEstudiante(string, int) = 0;
+    virtual void agregarCarreraEstudiante(string, int) = 0;
+    virtual void quitarCarreraDeEstudiante(string, int) = 0;
+    virtual ICollection* mostrarCarreras() = 0;
+    virtual ICollection* mostrarCarrerasDeEstudiante(string) = 0;
+    virtual OfertaLaboral* getOferta(int) = 0;
+    virtual IDictionary* getCarreras() = 0;
 
     // Casos de uso Modificar Llamado
     virtual dtOfertaLaboral* getOfertaLaboral(int) = 0;
@@ -57,6 +67,9 @@ class ISistema {
 
     // Caso de uso Alta Entrevista
     virtual void altaEntrevista(string ci, int nroExp, string fecha) = 0;
+
+    // Caso de uso Modificar Estudiante
+    virtual Estudiante* getEstudiante(string) = 0;
 
 
     //  --> primer Diagrama de comunicacion

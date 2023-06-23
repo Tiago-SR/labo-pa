@@ -74,6 +74,7 @@ class Sistema : public ISistema {
     // --> ofertas laborales
     bool checkOferta(int);
     ICollection* listarOfertasActivasDeEmpresa(string);
+    OfertaLaboral* getOferta(int);
 
     // --> estudiantes
     bool checkEstudiante(string);
@@ -84,8 +85,14 @@ class Sistema : public ISistema {
 
     // --> carreras
     bool checkCarrera(int);
+    bool checkCarreraDeEstudiante(string, int);
     void altaCarrera(int, string, int, IDictionary*);
+    void agregarCarreraEstudiante(string, int);
+    void quitarCarreraDeEstudiante(string, int);
     IDictionary* getCarreras();
+    Carrera* getCarrera(int);
+    ICollection* mostrarCarreras();
+    ICollection* mostrarCarrerasDeEstudiante(string);
 
     // Caso de uso Modificar Llamado
     dtOfertaLaboral* getOfertaLaboral(int);

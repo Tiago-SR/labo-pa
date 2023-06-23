@@ -44,6 +44,7 @@ class OfertaLaboral : public ICollectible {
     OfertaLaboral(int, string, string, int, dtRangoSalario*, dtFecha*, dtFecha*, int, Seccion*);
     OfertaLaboral(dtOfertaLaboral*, Seccion*);
     // void setNroExpediente(int); no creo que se deba cambiar el nroExpediente
+    void setAsignaturas(IDictionary*);
     void setTitulo(string);
     void setDesc(string);
     void setCantHoras(int);

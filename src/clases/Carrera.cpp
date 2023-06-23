@@ -1,10 +1,21 @@
 #include "../header/Carrera.h"
 
-Carrera::Carrera(int codigo, string nombre, int creditosNecesarios, IDictionary* asignaturas) {
+Carrera::Carrera(int codigo, string nombre, int creditosNecesarios) {
   this->codigo = codigo;
   this->nombre = nombre;
   this->creditosNecesarios = creditosNecesarios;
   this->asignaturas = new OrderedDictionary();
+}
+Carrera::Carrera(int codigo, string nombre, int creditosNecesarios, IDictionary* asignaturas) {
+  this->codigo = codigo;
+  this->nombre = nombre;
+  this->creditosNecesarios = creditosNecesarios;
+  this->asignaturas = asignaturas;
+}
+
+void Carrera::agregarAsignatura(Asignatura* asignatura) {
+  if (this->asignaturas->member(new Integer(asignatura->getCodigo()))) throw invalid_argument("La asignatura ya existe en la carrera.");
+  this->asignaturas->add(new Integer(asignatura->getCodigo()), asignatura);
 }
 
 Carrera::~Carrera() {

@@ -55,6 +55,9 @@ void OfertaLaboral::setCantPuestos(int cantPuestos) {
 int OfertaLaboral::getNroExpediente() {
   return this->nroExpediente;
 }
+void OfertaLaboral::setAsignaturas(IDictionary* nuevasAsignaturas){
+  this->asignaturas = nuevasAsignaturas;
+}
 string OfertaLaboral::getTitulo() {
   return this->titulo;
 }

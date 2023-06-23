@@ -11,6 +11,7 @@ Estudiante::Estudiante(string ci, string nombre, string apellido, string telefon
   this->asignaturas = new OrderedDictionary();
   this->efectivos = new OrderedDictionary();
   this->anotarse = new OrderedDictionary();
+  this->carreras = new OrderedDictionary();
 }
 void Estudiante::setNombre(string nombre) {
   this->nombre = nombre;
@@ -96,6 +97,33 @@ ICollection* Estudiante::mostrarLlamadosEstudiante() {
 bool Estudiante::estaVinculadoOferta(int nroExp) {
   return anotarse->member(new Integer(nroExp));
 }
+
+void Estudiante::quitarAsignatura(int codigo) {
+  asignaturas->remove(new Integer(codigo));
+}
+bool Estudiante::checkCarrera(int codigo) {
+  return carreras->member(new Integer(codigo));
+}
+void Estudiante::agregarCarrera(Carrera* c) {
+  carreras->add(new Integer(c->getCodigo()), c);
+}
+void Estudiante::quitarCarrera(int codigo) {
+  carreras->remove(new Integer(codigo));
+}
+bool Estudiante::tieneCarreras() {
+  return !carreras->isEmpty();
+}
+ICollection* Estudiante::mostrarCarreras() {
+  ICollection* ret = new List();
+  IIterator* it = carreras->getIterator();
+  while (it->hasCurrent()) {
+    ret->add((Carrera*)(it->getCurrent()));
+    it->next();
+  }
+  delete it;
+  return ret;
+}
+
 
 Estudiante::~Estudiante() {
   // TO-DO cuando se implemente anotarse y efectivo

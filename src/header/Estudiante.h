@@ -18,6 +18,7 @@ using namespace std;
 #include "Asignatura.h"
 #include "Anotarse.h"
 #include "Efectivo.h"
+#include "Carrera.h"
 
 class Anotarse;
 class Efectivo;
@@ -33,7 +34,7 @@ class Estudiante : public ICollectible {
     IDictionary *asignaturas; // --> de tipo Asignatura
     IDictionary *efectivos; // --> de tipo OfertaLaboral
     IDictionary *anotarse; // --> de tipo Anotarse
-
+    IDictionary *carreras;
   public:
     Estudiante(string, string, string, string, dtDireccion*, dtFecha*, int);
     // void setCi(string); no creo que deba poderse cambiar la ci
@@ -52,6 +53,14 @@ class Estudiante : public ICollectible {
     int getCreditos();
 
     bool checkAsignatura(int);
+
+    void quitarAsignatura(int);
+
+    bool checkCarrera(int);
+    void agregarCarrera(Carrera*);
+    void quitarCarrera(int);
+    bool tieneCarreras();
+    ICollection* mostrarCarreras();
 
     void agregarAsignatura(Asignatura*);
     bool estaVinculadoOferta(int);

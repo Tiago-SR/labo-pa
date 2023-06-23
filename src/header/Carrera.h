@@ -7,6 +7,9 @@ using namespace std;
 #include "../../ICollection/interfaces/ICollectible.h"
 #include "../../ICollection/interfaces/IDictionary.h"
 #include "../../ICollection/collections/OrderedDictionary.h"
+#include "../../ICollection/Integer.h"
+
+#include "Asignatura.h"
 
 
 class Carrera : public ICollectible{
@@ -16,6 +19,7 @@ class Carrera : public ICollectible{
     int creditosNecesarios;
     IDictionary* asignaturas;
   public:
+    Carrera(int codigo, string nombre, int creditosNecesarios);
     Carrera(int codigo, string nombre, int creditosNecesarios, IDictionary* asignaturas);
     virtual ~Carrera();
 
@@ -23,6 +27,7 @@ class Carrera : public ICollectible{
     string getNombre();
     int getCreditosNecesarios();
     IDictionary* getAsignaturas();
+    void agregarAsignatura(Asignatura* asignatura);
 
     void setCodigo(int codigo);
     void setNombre(string nombre);
